@@ -15,10 +15,8 @@ To install the latest version from GitHub:
 
 ```r
 install.packages("devtools") # if not already installed
-devtools::install_github("yourusername/CooRTweetPost")
+devtools::install_github("massimo-terenzi/CooRTweetPost")
 ```
-
-Replace `"yourusername"` with your actual GitHub username.
 
 ---
 
