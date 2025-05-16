@@ -48,11 +48,6 @@ export_all_results <- function(coordinated_groups, network_graph, output_dir = "
   data.table::fwrite(objects_output$object_community_long, file.path(output_dir, "coordinated_objects_by_community.csv"))
   cat("📦 CSV files saved.\n")
 
-  # Save RDS
-  saveRDS(coordinated_groups, file.path(output_dir, "coordinated_groups.rds"))
-  saveRDS(network_graph, file.path(output_dir, "network_coordinated.rds"))
-  cat("💾 RDS objects saved.\n")
-
   # Final status
   cat("\n✅ Post-processing complete.\n")
   cat("📌 Nodes:", igraph::vcount(network_graph),
