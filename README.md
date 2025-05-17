@@ -5,7 +5,7 @@ It creates structured summary tables of coordinated behavior:
 
 - **by account**
 - **by community**
-- **by shared object** (e.g., link, image, hashtag)
+- **by shared object** (e.g., text, link, image, hashtag)
 
 ---
 
