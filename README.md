@@ -7,14 +7,6 @@ It creates structured summary tables of coordinated behavior:
 - **by community**
 - **by shared object** (e.g., text, link, image, hashtag)
 
-## 📝 Citation
-
-If you use this tool in your work, please cite it as:
-
-Terenzi, M. (2025). *CooRTweetPost (Version 1.0)* [Software]. Zenodo. https://doi.org/10.5281/zenodo.15678492 
-
-[![DOI](https://zenodo.org/badge/984767700.svg)](https://doi.org/10.5281/zenodo.15678492)
-
 ---
 
 ## 🔧 Installation
