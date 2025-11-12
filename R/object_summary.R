@@ -1,3 +1,13 @@
+#' Create summary table by object
+#'
+#' Creates summary tables for coordinated objects (shared content) in the network.
+#' Includes content_id tracking to link objects to their source posts.
+#'
+#' @param coordinated_groups A data frame of coordinated groups from detect_groups()
+#' @param network_graph An igraph object from generate_coordinated_network()
+#'
+#' @return A list with two data frames: object_summary and object_community_long
+#' @export
 create_object_summary_table <- function(coordinated_groups, network_graph) {
   if (!igraph::is_igraph(network_graph)) {
     stop("Invalid graph object. Please provide a valid igraph object.")

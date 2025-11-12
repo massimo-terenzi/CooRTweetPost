@@ -1,1 +1,4 @@
+export(create_community_summary_table)
+export(create_object_summary_table)
+export(create_vertex_summary_table)
 export(export_all_results)

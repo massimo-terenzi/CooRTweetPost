@@ -1,3 +1,13 @@
+#' Create summary table by community (networks)
+#'
+#' Creates a summary table with metrics for each community detected in the coordinated network.
+#' Includes content_id tracking to analyze content patterns across communities.
+#'
+#' @param coordinated_groups A data frame of coordinated groups from detect_groups()
+#' @param network_graph An igraph object from generate_coordinated_network()
+#'
+#' @return A data frame with one row per community
+#' @export
 create_community_summary_table <- function(coordinated_groups, network_graph) {
   if (!igraph::is_igraph(network_graph)) stop("Invalid graph object. Please provide a valid igraph object.")
   coordinated_vertices <- igraph::V(network_graph)$name
