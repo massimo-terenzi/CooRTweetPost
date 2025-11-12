@@ -42,6 +42,18 @@ create_vertex_summary_table <- function(coordinated_groups, network_graph) {
     dplyr::group_by(vertex) %>%
     dplyr::summarize(unique_objects = dplyr::n_distinct(object_ids), .groups = "drop")
 
+  # Content ID tracking
+  content_data <- vertices_long %>%
+    dplyr::mutate(content_ids_list = strsplit(content_ids, ",")) %>%
+    tidyr::unnest(content_ids_list) %>%
+    dplyr::filter(content_ids_list != "") %>%
+    dplyr::group_by(vertex) %>%
+    dplyr::summarize(
+      unique_contents = dplyr::n_distinct(content_ids_list),
+      content_ids = paste(sort(unique(content_ids_list)), collapse = ","),
+      .groups = "drop"
+    )
+
   connections <- edges %>%
     dplyr::bind_rows(dplyr::mutate(edges, from = to, to = from)) %>%
     dplyr::distinct() %>%
@@ -50,6 +62,7 @@ create_vertex_summary_table <- function(coordinated_groups, network_graph) {
 
   summary_table <- time_deltas %>%
     dplyr::left_join(objects_data, by = "vertex") %>%
+    dplyr::left_join(content_data, by = "vertex") %>%
     dplyr::left_join(connections, by = c("vertex" = "from")) %>%
     dplyr::left_join(vertices, by = c("vertex" = "account_id")) %>%
     dplyr::mutate(dplyr::across(where(is.numeric), ~ ifelse(is.na(.), 0, .)))

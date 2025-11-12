@@ -15,7 +15,7 @@ create_object_summary_table <- function(coordinated_groups, network_graph) {
                   account_id_y %in% coordinated_vertices)
 
   object_long_base <- edges %>%
-    dplyr::select(account_id, account_id_y, object_id, time_delta) %>%
+    dplyr::select(account_id, account_id_y, object_id, content_id, time_delta) %>%
     dplyr::filter(!is.na(object_id)) %>%
     tidyr::pivot_longer(cols = c(account_id, account_id_y), names_to = "position", values_to = "account_id") %>%
     dplyr::left_join(vert, by = "account_id")
@@ -26,13 +26,15 @@ create_object_summary_table <- function(coordinated_groups, network_graph) {
       unique_vertices = dplyr::n_distinct(account_id),
       unique_communities = dplyr::n_distinct(community),
       community_list = paste(sort(unique(community)), collapse = ","),
+      unique_contents = dplyr::n_distinct(content_id),
+      content_ids = paste(sort(unique(content_id)), collapse = ","),
       avg_time_delta = mean(time_delta, na.rm = TRUE),
       .groups = "drop"
     ) %>%
     dplyr::mutate(dplyr::across(where(is.numeric), ~ifelse(is.na(.), 0, .)))
 
   object_community_long <- object_long_base %>%
-    dplyr::select(object_id, community) %>%
+    dplyr::select(object_id, community, content_id) %>%
     dplyr::filter(!is.na(object_id), !is.na(community)) %>%
     dplyr::distinct()
 

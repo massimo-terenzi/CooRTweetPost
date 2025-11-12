@@ -41,12 +41,25 @@ create_community_summary_table <- function(coordinated_groups, network_graph) {
     dplyr::group_by(community) %>%
     dplyr::summarize(unique_objects = dplyr::n_distinct(object_ids), .groups = "drop")
 
+  # Content ID tracking
+  community_contents <- community_long %>%
+    dplyr::mutate(content_ids_list = strsplit(content_ids, ",")) %>%
+    tidyr::unnest(content_ids_list) %>%
+    dplyr::filter(content_ids_list != "") %>%
+    dplyr::group_by(community) %>%
+    dplyr::summarize(
+      unique_contents = dplyr::n_distinct(content_ids_list),
+      content_ids = paste(sort(unique(content_ids_list)), collapse = ","),
+      .groups = "drop"
+    )
+
   vertices_per_community <- vertices %>%
     dplyr::group_by(community) %>%
     dplyr::summarize(unique_vertices = dplyr::n_distinct(account_id), .groups = "drop")
 
   community_summary <- community_metrics %>%
     dplyr::left_join(community_objects, by = "community") %>%
+    dplyr::left_join(community_contents, by = "community") %>%
     dplyr::left_join(vertices_per_community, by = "community") %>%
     dplyr::mutate(dplyr::across(where(is.numeric), ~ ifelse(is.na(.), 0, .)))
 
