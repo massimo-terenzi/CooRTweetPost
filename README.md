@@ -195,6 +195,5 @@ Open an issue [here](https://github.com/massimo-terenzi/CooRTweetPost/issues) or
 If you use this package in your research, please cite:
 
 ```
-Terenzi, M. (2024). CooRTweetPost: Post-processing Suite for Coordinated Behavior Analysis. 
-R package version 0.3.0. https://github.com/massimo-terenzi/CooRTweetPost
+Terenzi, M. (2025). CooRTweetPost (v0.3.0). Zenodo. https://doi.org/10.5281/zenodo.17592819
 ```
