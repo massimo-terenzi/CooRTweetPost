@@ -35,21 +35,95 @@ You need to have already used **CooRTweet** to:
 2. Detect coordinated groups  
 3. Generate the coordination network graph  
 
-### ▶️ Example
+### ▶️ Quick Start Example
 
 ```r
 library(CooRTweet)
 library(CooRTweetPost)
 
 # Step 1: Detect coordinated groups
-groups <- detect_groups(my_data, time_window = 60)
+coordinated_groups <- detect_groups(
+  x = my_data, 
+  min_participation = 2,
+  time_window = 60
+)
 
 # Step 2: Generate coordination network
-g <- generate_coordinated_network(groups, edge_weight = 0.9)
+g <- generate_coordinated_network(
+  coordinated_groups, 
+  edge_weight = 0.8,
+  subgraph = 1,
+  objects = TRUE
+)
 
-# Step 3: Post-process and export summaries
-export_all_results(groups, g, output_dir = "my_output")
+# Step 3: Export all results automatically
+export_all_results(
+  coordinated_groups = coordinated_groups,
+  network_graph = g,
+  output_dir = "my_output"
+)
 ```
+
+### 🔍 Advanced Usage: Individual Summary Functions
+
+If you need more control, you can call the summary functions individually:
+
+```r
+library(CooRTweetPost)
+library(CooRTweet)
+library(igraph)
+
+# After detecting groups and generating the network...
+
+# Add community detection (if not already done)
+if (is.null(V(g)$name)) {
+  V(g)$name <- as.character(seq_len(vcount(g)))
+}
+
+if (vcount(g) > 1 && ecount(g) > 0) {
+  com <- cluster_louvain(g)
+  V(g)$community <- membership(com)
+}
+
+# Generate individual summary tables
+accounts_summary <- create_vertex_summary_table(coordinated_groups, g)
+communities_summary <- create_community_summary_table(coordinated_groups, g)
+objects_output <- create_object_summary_table(coordinated_groups, g)
+
+# Extract object summaries
+objects_summary <- objects_output$object_summary
+objects_by_community <- objects_output$object_community_long
+
+# Now you can work with the dataframes directly
+head(accounts_summary)
+#   vertex  avg_time_delta  unique_objects  unique_contents  content_ids  ...
+```
+
+### 📊 What You Get in Each Summary
+
+**Accounts Summary** (`coordinated_accounts.csv`):
+- `vertex`: Account identifier
+- `avg_time_delta`: Average time difference in coordinated shares
+- `unique_objects`: Number of unique objects shared
+- `unique_contents`: Number of unique content IDs ✨ NEW
+- `content_ids`: Comma-separated list of content IDs ✨ NEW
+- `connected_vertices`: Number of connected accounts
+- `community`: Community membership
+
+**Communities Summary** (`coordinated_communities.csv`):
+- `community`: Community ID
+- `avg_time_delta`: Average coordination timing
+- `unique_objects`: Objects shared in the community
+- `unique_contents`: Unique content items ✨ NEW
+- `content_ids`: Content list ✨ NEW
+- `unique_vertices`: Number of accounts
+
+**Objects Summary** (`coordinated_objects.csv`):
+- `object_id`: The shared object (text, URL, etc.)
+- `unique_vertices`: How many accounts shared it
+- `unique_communities`: Across how many communities
+- `unique_contents`: Linked content items ✨ NEW
+- `content_ids`: Source content URLs ✨ NEW
 
 ---
 
@@ -74,11 +148,40 @@ This package requires:
 - `dplyr`
 - `tidyr`
 - `data.table`
+- `magrittr`
 
 You can install them via:
 
 ```r
-install.packages(c("igraph", "dplyr", "tidyr", "data.table"))
+install.packages(c("igraph", "dplyr", "tidyr", "data.table", "magrittr"))
+```
+
+---
+
+## 💡 Use Cases
+
+### Track Content Propagation
+```r
+# Find which specific posts were coordinated
+accounts_summary %>%
+  filter(unique_contents > 5) %>%
+  select(vertex, content_ids)
+```
+
+### Analyze Cross-Community Sharing
+```r
+# Which objects were shared across multiple communities?
+objects_summary %>%
+  filter(unique_communities > 1) %>%
+  arrange(desc(unique_communities))
+```
+
+### Link Back to Original Posts
+```r
+# Get all content URLs shared by a specific community
+objects_by_community %>%
+  filter(community == 1) %>%
+  pull(content_id)
 ```
 
 ---
@@ -86,3 +189,12 @@ install.packages(c("igraph", "dplyr", "tidyr", "data.table"))
 ## 📬 Questions?
 
 Open an issue [here](https://github.com/massimo-terenzi/CooRTweetPost/issues) or contact the maintainer.
+
+## 📄 Citation
+
+If you use this package in your research, please cite:
+
+```
+Terenzi, M. (2024). CooRTweetPost: Post-processing Suite for Coordinated Behavior Analysis. 
+R package version 0.3.0. https://github.com/massimo-terenzi/CooRTweetPost
+```
