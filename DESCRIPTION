@@ -3,7 +3,6 @@ Type: Package
 Title: Full Post-processing Suite for CooRTweet Outputs
 Version: 0.3.0
 Author: Massimo Terenzi
-Maintainer: Massimo Terenzi <massimo.terenzi@uniurb.it>
 Maintainer: Massimo Terenzi <your.email@example.com>
 Description: Processes CooRTweet results including graph enrichment and exports detailed CSV summaries.
 License: MIT
@@ -13,4 +12,5 @@ Imports:
     igraph,
     data.table,
     dplyr,
-    tidyr
+    tidyr,
+    magrittr
