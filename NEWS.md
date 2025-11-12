@@ -9,14 +9,6 @@
   
 * Enhanced traceability: Users can now track the relationship between coordinated behavior, shared objects, and original content sources across all aggregation levels (accounts, communities, objects)
 
-* **Function exports**: All summary functions are now properly exported and accessible after loading the package
-
-## Bug Fixes
-
-* Fixed missing pipe operator `%>%` by adding `magrittr` to imports
-* Added proper `@export` tags to all summary functions
-* Updated NAMESPACE to include all function exports
-
 ## Technical Details
 
 The `content_id` column (typically the post URL or unique identifier) is now:
@@ -26,16 +18,3 @@ The `content_id` column (typically the post URL or unique identifier) is now:
 - Preserved as comma-separated lists for easy reference
 
 This enables more detailed analysis of content propagation patterns and coordinated sharing strategies.
-
-## Dependencies
-
-* Added `magrittr` to Imports for pipe operator support
-
----
-
-# CooRTweetPost 0.2.0
-
-* Initial public release
-* Core functionality for processing CooRTweet outputs
-* Graph enrichment and community detection
-* CSV export capabilities for accounts, communities, and objects
